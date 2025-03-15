@@ -10,20 +10,14 @@ const zoneID = ""; // Ganti dengan Zone ID kalian (https://dash.cloudflare.com -
 let isApiReady = false;
 let proxyIP = "";
 let cachedProxyList = [];
-const defaultUUID = "8f3e2240-213a-4116-9a50-cba948b94ff0"
 
 // Constant
 const APP_DOMAIN = `${serviceName}.${rootDomain}`;
-const PORTS = [443, 80];
-const PROTOCOLS = [reverse("najort"), reverse("sselv"), reverse("ss")];
-const KV_PROXY_URL = "";
-const PROXY_BANK_URL = "";
 const DNS_SERVER_ADDRESS = "8.8.8.8";
 const DNS_SERVER_PORT = 53;
 const PROXY_HEALTH_CHECK_API = "";
 const CONVERTER_URL = "";
 const DONATE_LINK = "https://trakteer.id/dickymuliafiqri/tip";
-const PROXY_PER_PAGE = 24;
 const WS_READY_STATE_OPEN = 1;
 const WS_READY_STATE_CLOSING = 2;
 const CORS_HEADER_OPTIONS = {

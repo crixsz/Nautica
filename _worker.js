@@ -32,52 +32,6 @@ const CORS_HEADER_OPTIONS = {
   "Access-Control-Max-Age": "86400",
 };
 
-async function getKVProxyList(kvProxyUrl = KV_PROXY_URL) {
-  if (!kvProxyUrl) {
-    throw new Error("No KV Proxy URL Provided!");
-  }
-
-  const kvProxy = await fetch(kvProxyUrl);
-  if (kvProxy.status == 200) {
-    return await kvProxy.json();
-  } else {
-    return {};
-  }
-}
-
-async function getProxyList(proxyBankUrl = PROXY_BANK_URL) {
-  /**
-   * Format:
-   *
-   * <IP>,<Port>,<Country ID>,<ORG>
-   * Contoh:
-   * 1.1.1.1,443,SG,Cloudflare Inc.
-   */
-  if (!proxyBankUrl) {
-    throw new Error("No Proxy Bank URL Provided!");
-  }
-
-  const proxyBank = await fetch(proxyBankUrl);
-  if (proxyBank.status == 200) {
-    const text = (await proxyBank.text()) || "";
-
-    const proxyString = text.split("\n").filter(Boolean);
-    cachedProxyList = proxyString
-      .map((entry) => {
-        const [proxyIP, proxyPort, country, org] = entry.split(",");
-        return {
-          proxyIP: proxyIP || "Unknown",
-          proxyPort: proxyPort || "Unknown",
-          country: country || "Unknown",
-          org: org || "Unknown Org",
-        };
-      })
-      .filter(Boolean);
-  }
-
-  return cachedProxyList;
-}
-
 async function reverseProxy(request, target, targetPath) {
   const targetUrl = new URL(request.url);
   const targetChunk = target.split(":");

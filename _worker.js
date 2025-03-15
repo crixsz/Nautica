@@ -10,6 +10,7 @@ const zoneID = ""; // Ganti dengan Zone ID kalian (https://dash.cloudflare.com -
 let isApiReady = false;
 let proxyIP = "";
 let cachedProxyList = [];
+const defaultUUID = "8f3e2240-213a-4116-9a50-cba948b94ff0"
 
 // Constant
 const APP_DOMAIN = `${serviceName}.${rootDomain}`;
@@ -104,7 +105,7 @@ function getAllConfig(request, hostName, proxyList, page = 0) {
   const startIndex = PROXY_PER_PAGE * page;
 
   try {
-    const uuid = crypto.randomUUID();
+    const uuid = defaultUUID;
 
     // Build URI
     const uri = new URL(`${reverse("najort")}://${hostName}`);
@@ -291,7 +292,7 @@ export default {
               return proxies;
             });
 
-          const uuid = crypto.randomUUID();
+          const uuid = defaultUUID;
           const result = [];
           for (const proxy of proxyList) {
             const uri = new URL(`${reverse("najort")}://${fillerDomain}`);

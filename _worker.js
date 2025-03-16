@@ -45,9 +45,13 @@ export default {
       // Handle proxy client
       if (upgradeHeader === "websocket") {
         const proxyMatch = url.pathname.match(/^\/(.+[:=-]\d+)$/);
-        
+
+        // if pathname is /default or none provided it will use user defined proxy
         if (proxyMatch) {
           proxyIP = proxyMatch[1];
+          return await websocketHandler(request);
+        } else if (url.pathname === "/default" || url.pathname === "/" || url.pathname === "") {
+          proxyIP = "15.235.162.49:443" // OVH SG;
           return await websocketHandler(request);
         }
       }

@@ -180,8 +180,8 @@ async function protocolSniffer(buffer) {
   }
 
   const sselvDelimiter = new Uint8Array(buffer.slice(1, 17));
-  // Hanya mendukung UUID v4
-  if (arrayBufferToHex(sselvDelimiter).match(/^[0-9a-f]{8}[0-9a-f]{4}4[0-9a-f]{3}[89ab][0-9a-f]{3}[0-9a-f]{12}$/i)) {
+  // Accept any string of UUID
+  if (sselvDelimiter.length > 0) {
     return reverse("SSELV");
   }
 

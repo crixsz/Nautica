@@ -6,7 +6,6 @@ let proxyIP = "";
 // Constant
 const DNS_SERVER_ADDRESS = "8.8.8.8";
 const DNS_SERVER_PORT = 53;
-const PROXY_HEALTH_CHECK_API = "";
 const WS_READY_STATE_OPEN = 1;
 const WS_READY_STATE_CLOSING = 2;
 const CORS_HEADER_OPTIONS = {
@@ -562,11 +561,6 @@ function safeCloseWebSocket(socket) {
   }
 }
 
-async function checkProxyHealth(proxyIP, proxyPort) {
-  const req = await fetch(`${PROXY_HEALTH_CHECK_API}?ip=${proxyIP}:${proxyPort}`);
-  return await req.json();
-}
-
 // Helpers
 function base64ToArrayBuffer(base64Str) {
   if (!base64Str) {
@@ -580,10 +574,6 @@ function base64ToArrayBuffer(base64Str) {
   } catch (error) {
     return { error };
   }
-}
-
-function arrayBufferToHex(buffer) {
-  return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, "0")).join("");
 }
 
 function reverse(s) {

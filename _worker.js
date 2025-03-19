@@ -105,11 +105,11 @@ async function websocketHandler(request) {
           const protocol = await protocolSniffer(chunk);
           let protocolHeader;
 
-          if (protocol === reverse("najorT")) {
-            protocolHeader = parseNajortHeader(chunk);
-          } else if (protocol === reverse("SSELV")) {
-            protocolHeader = parseSselvHeader(chunk);
-          } else if (protocol === reverse("skcoswodahS")) {
+          if (protocol === "Trojan") {
+            protocolHeader = parseTrojanHeader(chunk);
+          } else if (protocol === "VLESS") {
+            protocolHeader = parseVlessHeader(chunk);
+          } else if (protocol === "Shadowsocks") {
             protocolHeader = parseSsHeader(chunk);
           } else {
             throw new Error("Unknown Protocol!");
@@ -172,23 +172,22 @@ async function websocketHandler(request) {
 
 async function protocolSniffer(buffer) {
   if (buffer.byteLength >= 62) {
-    const najortDelimiter = new Uint8Array(buffer.slice(56, 60));
-    if (najortDelimiter[0] === 0x0d && najortDelimiter[1] === 0x0a) {
-      if (najortDelimiter[2] === 0x01 || najortDelimiter[2] === 0x03 || najortDelimiter[2] === 0x7f) {
-        if (najortDelimiter[3] === 0x01 || najortDelimiter[3] === 0x03 || najortDelimiter[3] === 0x04) {
-          return reverse("najorT");
+    const trojanDelimiter = new Uint8Array(buffer.slice(56, 60));
+    if (trojanDelimiter[0] === 0x0d && trojanDelimiter[1] === 0x0a) {
+      if (trojanDelimiter[2] === 0x01 || trojanDelimiter[2] === 0x03 || trojanDelimiter[2] === 0x7f) {
+        if (trojanDelimiter[3] === 0x01 || trojanDelimiter[3] === 0x03 || trojanDelimiter[3] === 0x04) {
+          return "Trojan";
         }
       }
     }
   }
 
-  const sselvDelimiter = new Uint8Array(buffer.slice(1, 17));
+  const vlessDelimiter = new Uint8Array(buffer.slice(1, 17));
   // Accept any string of UUID
-  if (sselvDelimiter.length > 0) {
-    return reverse("SSELV");
+  if (vlessDelimiter.length > 0) {
+    return "VLESS";
   }
-
-  return reverse("skcoswodahS"); // default
+  return "Shadowsocks"; // default
 }
 
 async function handleTCPOutBound(
@@ -347,7 +346,7 @@ function parseSsHeader(ssBuffer) {
     default:
       return {
         hasError: true,
-        message: `Invalid addressType for ${reverse("skcoswodahS")}: ${addressType}`,
+        message: `Invalid addressType for shadowsocks}: ${addressType}`,
       };
   }
 
@@ -373,7 +372,7 @@ function parseSsHeader(ssBuffer) {
   };
 }
 
-function parseSselvHeader(buffer) {
+function parseVlessHeader(buffer) {
   const version = new Uint8Array(buffer.slice(0, 1));
   let isUDP = false;
 
@@ -444,7 +443,7 @@ function parseSselvHeader(buffer) {
   };
 }
 
-function parseNajortHeader(buffer) {
+function parseTrojanHeader(buffer) {
   const socks5DataBuffer = buffer.slice(58);
   if (socks5DataBuffer.byteLength < 6) {
     return {
@@ -580,6 +579,3 @@ function base64ToArrayBuffer(base64Str) {
   }
 }
 
-function reverse(s) {
-  return s.split("").reverse().join("");
-}
